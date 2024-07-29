@@ -62,7 +62,33 @@ module.exports = new (class TransactionsServices {
         return create
     }
 
+    async update(req) {
+        const {
+            description,
+            transaction,
+            category_id
+        } = req.body
+        const { id } = req.params
+        const { id: userId } = req.connectedUser
 
+        const category = await handleFindByPk(categories, category_id)
+        // handleError(
+        //     !category,
+        //     'Categoria inexistente!',
+        //     404
+        // )
+        // handleError(  falta update com calculo certo da atualização!!!!! pegando a transaction anterior e atual e calculando o valor que atualizará o balance
+        //     category.user_id !== userId,
+        //     'Acão negada!',
+        //     401
+        // )
+
+        // return await handleUpdate(
+        //     categories,
+        //     { name },
+        // { id }
+        // )
+    }
 
     // async destroy(req) {
     //     const { id } = req.params

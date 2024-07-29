@@ -12,6 +12,17 @@ class CategoriesController {
         }
     }
 
+    async getOne(req, res) {
+        try {
+            const getOne = await categoriesServices.getOne(req)
+
+            return res.status(200).json(getOne)
+        } catch (err) {
+            const statusCode = err.status ? err.status : 500
+            return res.status(statusCode).json({ error: err.message })
+        }
+    }
+
     async create(req, res) {
         try {
             const create = await categoriesServices.create(req)

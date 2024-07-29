@@ -2,6 +2,7 @@ const { Router } = require("express")
 const CategoriesController = require("../controllers/CategoriesController")
 const yupValidation = require("../middlewares/yupValidation")
 const {
+    categoryIdSchema,
     categoryCreateSchema,
     categoryUpdateSchema,
     categoryDestroySchema
@@ -25,6 +26,13 @@ class CategoriesRoute {
             this.categoriesController.getAll
         )
 
+        this.routes.get(
+            "/category/:id",
+            validateToken,
+            yupValidation(categoryIdSchema),
+            this.categoriesController.getOne
+        )
+
         this.routes.post(
             "/category",
             validateToken,
@@ -32,7 +40,7 @@ class CategoriesRoute {
             this.categoriesController.create
         )
 
-        this.routes.patch(
+        this.routes.put(
             "/category/:id",
             validateToken,
             yupValidation(categoryUpdateSchema),

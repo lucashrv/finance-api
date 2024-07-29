@@ -1,5 +1,11 @@
 const yup = require("./TranslationsYup")
 
+const categoryIdSchema = ({
+    params: yup.object({
+        id: yup.number().moreThan(0).required()
+    }),
+})
+
 const categoryCreateSchema = ({
     body: yup.object({
         name: yup.string(40).min(2)
@@ -23,6 +29,7 @@ const categoryDestroySchema = ({
 })
 
 module.exports = {
+    categoryIdSchema,
     categoryCreateSchema,
     categoryUpdateSchema,
     categoryDestroySchema

@@ -3,7 +3,7 @@ const yup = require("./TranslationsYup")
 const userSignUpSchema = ({
     body: yup.object({
         name: yup.string(40).min(2),
-        email: yup.string(40).email().min(8),
+        email: yup.string(40).email().min(1),
         password: yup.string().min(8),
         confirmPassword: yup.string().min(8)
     })
@@ -11,7 +11,7 @@ const userSignUpSchema = ({
 
 const userLoginSchema = ({
     body: yup.object({
-        email: yup.string(40).email().min(8),
+        email: yup.string(40).email().min(1),
         password: yup.string().min(8)
     })
 })
