@@ -7,7 +7,7 @@ const {
     handleUpdate,
     handleDestroy,
     handleError
-} = require("./handleServices/handeUtils")
+} = require("./handleServices/handleUtils")
 
 module.exports = new (class TransactionsServices {
     async getAll(req) {
@@ -44,7 +44,7 @@ module.exports = new (class TransactionsServices {
         const create = await handleCreate(transactions, {
             description,
             transaction: parseFloat(transaction),
-            type: transaction > 0 ? 'INCREMENT' : 'DECREMENT',
+            type: transaction > 0 ? 'INCOME' : 'EXPENSE',
             balance_updated: (user.balance + parseFloat(transaction)).toFixed(2),
             category_id,
             user_id: id

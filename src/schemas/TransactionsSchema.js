@@ -2,7 +2,7 @@ const yup = require("./TranslationsYup")
 
 const transactionsCreateSchema = ({
     body: yup.object({
-        description: yup.string().notRequired(),
+        description: yup.string().required(),
         transaction: yup.number(),
         category_id: yup.number().moreThan(0).required(),
     })

@@ -7,7 +7,7 @@ const {
     handleCreate,
     handleUpdate,
     handleError
-} = require("./handleServices/handeUtils")
+} = require("./handleServices/handleUtils")
 
 module.exports = new (class UsersServices {
     async signUp(body) {

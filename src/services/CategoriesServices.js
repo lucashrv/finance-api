@@ -1,4 +1,4 @@
-const { categories, users } = require("../models")
+const { categories } = require("../models")
 const {
     handleFindAll,
     handleFindByPk,
@@ -7,7 +7,7 @@ const {
     handleUpdate,
     handleDestroy,
     handleError
-} = require("./handleServices/handeUtils")
+} = require("./handleServices/handleUtils")
 
 module.exports = new (class CategoriesServices {
     async getAll(req) {
