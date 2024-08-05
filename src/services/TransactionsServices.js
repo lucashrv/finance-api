@@ -151,7 +151,7 @@ module.exports = new (class TransactionsServices {
     //     handleError(
     //         category.user_id !== userId,
     //         'Acão negada!',
-    //         401
+    //         403
     //     )
 
     //     await handleDestroy(categories, { id })

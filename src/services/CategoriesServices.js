@@ -1,4 +1,4 @@
-const { categories } = require("../models")
+const { categories, transactions } = require("../models")
 const {
     handleFindAll,
     handleFindByPk,
@@ -13,7 +13,7 @@ module.exports = new (class CategoriesServices {
     async getAll(req) {
         const { id } = req.connectedUser
 
-        const getAll = await handleFindAll(categories, { user_id: id })
+        const getAll = await handleFindAll(categories, { user_id: id }, { order: [['name', 'ASC']] })
 
         return getAll
     }
@@ -27,7 +27,7 @@ module.exports = new (class CategoriesServices {
         handleError(
             category.user_id !== userId,
             'Acão negada!',
-            401
+            403
         )
 
         return category
@@ -78,7 +78,7 @@ module.exports = new (class CategoriesServices {
         handleError(
             category.user_id !== userId,
             'Acão negada!',
-            401
+            403
         )
 
         return await handleUpdate(
@@ -101,7 +101,14 @@ module.exports = new (class CategoriesServices {
         handleError(
             category.user_id !== userId,
             'Acão negada!',
-            401
+            403
+        )
+        const transaction = await handleFindAll(transactions, { category_id: id })
+
+        handleError(
+            !!transaction.length,
+            'Categoria cadastrada em transações!',
+            405
         )
 
         await handleDestroy(categories, { id })
