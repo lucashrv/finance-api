@@ -12,6 +12,17 @@ class TransactionsController {
         }
     }
 
+    async getOne(req, res) {
+        try {
+            const getOne = await transactionsServices.getOne(req)
+
+            return res.status(200).json(getOne)
+        } catch (err) {
+            const statusCode = err.status ? err.status : 500
+            return res.status(statusCode).json({ error: err.message })
+        }
+    }
+
     async create(req, res) {
         try {
             const create = await transactionsServices.create(req)
@@ -26,20 +37,20 @@ class TransactionsController {
         }
     }
 
-    // async update(req, res) {
-    //     try {
-    //         await transactionsServices.update(req)
+    async update(req, res) {
+        try {
+            await transactionsServices.update(req)
 
-    //         return res.status(200).json({ message: "Categoria atualizada com sucesso!" })
-    //     } catch (err) {
-    //         const statusCode = err.status ? err.status : 500
-    //         return res.status(statusCode).json({ error: err.message })
-    //     }
-    // }
+            return res.status(200).json({ message: "Transação atualizada com sucesso!" })
+        } catch (err) {
+            const statusCode = err.status ? err.status : 500
+            return res.status(statusCode).json({ error: err.message })
+        }
+    }
 
     // async destroy(req, res) {
     //     try {
-    //         await categoriesServices.destroy(req)
+    //         await transactionsServices.destroy(req)
 
     //         return res.status(200).json({ message: "Categoria deletada com sucesso!" })
     //     } catch (err) {

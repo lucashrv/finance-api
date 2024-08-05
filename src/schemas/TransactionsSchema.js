@@ -1,5 +1,11 @@
 const yup = require("./TranslationsYup")
 
+const transactionsIdSchema = ({
+    params: yup.object({
+        id: yup.number().moreThan(0).required()
+    }),
+})
+
 const transactionsCreateSchema = ({
     body: yup.object({
         description: yup.string().required(),
@@ -8,14 +14,16 @@ const transactionsCreateSchema = ({
     })
 })
 
-// const categoryUpdateSchema = ({
-//     body: yup.object({
-//         name: yup.string(40).min(2)
-//     }),
-//     params: yup.object({
-//         id: yup.number().moreThan(0).required()
-//     }),
-// })
+const transactionsUpdateSchema = ({
+    body: yup.object({
+        description: yup.string().required(),
+        transaction: yup.number(),
+        category_id: yup.number().moreThan(0).required(),
+    }),
+    params: yup.object({
+        id: yup.number().moreThan(0).required()
+    }),
+})
 
 
 // const categoryDestroySchema = ({
@@ -25,5 +33,7 @@ const transactionsCreateSchema = ({
 // })
 
 module.exports = {
-    transactionsCreateSchema
+    transactionsCreateSchema,
+    transactionsIdSchema,
+    transactionsUpdateSchema
 }

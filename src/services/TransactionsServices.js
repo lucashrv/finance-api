@@ -8,14 +8,45 @@ const {
     handleDestroy,
     handleError
 } = require("./handleServices/handleUtils")
+const { Op } = require('sequelize')
 
 module.exports = new (class TransactionsServices {
     async getAll(req) {
+        const { startDate, endDate } = req.query
         const { id } = req.connectedUser
 
-        const getAll = await handleFindAll(transactions, { user_id: id })
+        const date = new Date();
+        const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+        const getAll = await handleFindAll(
+            transactions,
+            {
+                user_id: id,
+                created_at: {
+                    [Op.between]: [startDate || startOfMonth, endDate || endOfMonth]
+                }
+            },
+            {
+                order: [['created_at', 'DESC']],
+                include: [{ model: categories }]
+            }
+
+        )
 
         return getAll
+    }
+
+    async getOne(req) {
+        const { id } = req.params
+        const { id: userId } = req.connectedUser
+
+        const getOne = await handleFindOne(transactions, {
+            id,
+            user_id: userId
+        })
+
+        return getOne
     }
 
     async create(req) {
@@ -71,23 +102,40 @@ module.exports = new (class TransactionsServices {
         const { id } = req.params
         const { id: userId } = req.connectedUser
 
-        const category = await handleFindByPk(categories, category_id)
-        // handleError(
-        //     !category,
-        //     'Categoria inexistente!',
-        //     404
-        // )
-        // handleError(  falta update com calculo certo da atualização!!!!! pegando a transaction anterior e atual e calculando o valor que atualizará o balance
-        //     category.user_id !== userId,
-        //     'Acão negada!',
-        //     401
-        // )
+        const user = await handleFindByPk(users, userId)
 
-        // return await handleUpdate(
-        //     categories,
-        //     { name },
-        // { id }
-        // )
+        const category = await handleFindOne(categories, {
+            id: category_id,
+            user_id: userId
+        })
+
+        handleError(
+            !category,
+            'Categoria inexistente!',
+            404
+        )
+
+        const getTransaction = await handleFindByPk(transactions, id)
+        handleError(
+            !getTransaction,
+            'Transação inexistente!',
+            404
+        )
+
+        await handleUpdate(transactions, {
+            description,
+            transaction: parseFloat(transaction),
+            type: transaction > 0 ? 'INCOME' : 'EXPENSE',
+            balance_updated: (user.balance + parseFloat(transaction)).toFixed(2),
+            category_id,
+            user_id: userId
+        }, { id, user_id: userId })
+
+        return await handleUpdate(
+            users,
+            { balance: (user.balance + (getTransaction.transaction * -1) + parseFloat(transaction)).toFixed(2) },
+            { id: userId }
+        )
     }
 
     // async destroy(req) {

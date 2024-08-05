@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
 
     Transactions.init(
         {
-            description: { type: DataTypes.STRING(), allowNull: false },
+            description: { type: DataTypes.STRING(20), allowNull: false },
             transaction: { type: DataTypes.FLOAT(), allowNull: false },
             type: { type: DataTypes.STRING(40), allowNull: false },
             balance_updated: { type: DataTypes.FLOAT(), allowNull: false }

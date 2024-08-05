@@ -1,10 +1,11 @@
 const { Op } = require("sequelize");
 
 class handleUtils {
-    handleFindAll = (model, filter) => {
+    handleFindAll = (model, filter, options) => {
         return model.findAll({
             where: { [Op.and]: [filter] },
-            raw: true
+            raw: true,
+            ...options
         });
     };
     handleFindOrderAll = (model, filter, order) => {
