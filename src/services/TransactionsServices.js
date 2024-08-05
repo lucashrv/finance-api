@@ -138,22 +138,33 @@ module.exports = new (class TransactionsServices {
         )
     }
 
-    // async destroy(req) {
-    //     const { id } = req.params
-    //     const { id: userId } = req.connectedUser
+    async destroy(req) {
+        const { id } = req.params
+        const { id: userId } = req.connectedUser
 
-    //     const category = await handleFindByPk(categories, id)
-    //     handleError(
-    //         !category,
-    //         'Categoria inexistente!',
-    //         404
-    //     )
-    //     handleError(
-    //         category.user_id !== userId,
-    //         'Acão negada!',
-    //         403
-    //     )
+        const user = await handleFindByPk(users, userId)
 
-    //     await handleDestroy(categories, { id })
-    // }
+        const transaction = await handleFindOne(transactions, {
+            id,
+            user_id: userId
+        })
+        handleError(
+            !transaction,
+            'Transação inexistente!',
+            404
+        )
+        handleError(
+            transaction.user_id !== userId,
+            'Acão negada!',
+            403
+        )
+
+        await handleDestroy(transactions, { id })
+
+        return await handleUpdate(
+            users,
+            { balance: user.balance + (transaction.transaction * -1) },
+            { id: userId }
+        )
+    }
 })

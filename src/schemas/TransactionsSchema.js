@@ -26,14 +26,15 @@ const transactionsUpdateSchema = ({
 })
 
 
-// const categoryDestroySchema = ({
-//     params: yup.object({
-//         id: yup.number().moreThan(0).required()
-//     }),
-// })
+const transactionDestroySchema = ({
+    params: yup.object({
+        id: yup.number().moreThan(0).required()
+    }),
+})
 
 module.exports = {
     transactionsCreateSchema,
     transactionsIdSchema,
-    transactionsUpdateSchema
+    transactionsUpdateSchema,
+    transactionDestroySchema
 }

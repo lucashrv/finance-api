@@ -48,16 +48,16 @@ class TransactionsController {
         }
     }
 
-    // async destroy(req, res) {
-    //     try {
-    //         await transactionsServices.destroy(req)
+    async destroy(req, res) {
+        try {
+            await transactionsServices.destroy(req)
 
-    //         return res.status(200).json({ message: "Categoria deletada com sucesso!" })
-    //     } catch (err) {
-    //         const statusCode = err.status ? err.status : 500
-    //         return res.status(statusCode).json({ error: err.message })
-    //     }
-    // }
+            return res.status(200).json({ message: "Transação deletada com sucesso!" })
+        } catch (err) {
+            const statusCode = err.status ? err.status : 500
+            return res.status(statusCode).json({ error: err.message })
+        }
+    }
 }
 
 module.exports = TransactionsController

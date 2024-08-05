@@ -4,7 +4,8 @@ const yupValidation = require("../middlewares/yupValidation")
 const {
     transactionsCreateSchema,
     transactionsIdSchema,
-    transactionsUpdateSchema
+    transactionsUpdateSchema,
+    transactionDestroySchema
 } = require("../schemas/TransactionsSchema")
 const validateToken = require("../middlewares/validateToken")
 
@@ -46,12 +47,12 @@ class TransactionsRoute {
             this.transactionsController.update
         )
 
-        // this.routes.patch(
-        //     "/user/change-name",
-        //     yupValidation(userChangeNameSchema),
-        //     validateToken,
-        //     this.transactionsController.changeName
-        // )
+        this.routes.delete(
+            "/transaction/:id",
+            yupValidation(transactionDestroySchema),
+            validateToken,
+            this.transactionsController.destroy
+        )
 
         return this.routes
     }
