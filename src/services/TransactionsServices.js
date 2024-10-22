@@ -12,6 +12,24 @@ const { Op } = require('sequelize')
 
 module.exports = new (class TransactionsServices {
     async getAll(req) {
+        const { id } = req.connectedUser
+
+        const getAll = await handleFindAll(
+            transactions,
+            {
+                user_id: id,
+            },
+            {
+                order: [['created_at', 'DESC']],
+                include: [{ model: categories }]
+            }
+
+        )
+
+        return getAll
+    }
+
+    async getAllDate(req) {
         const { startDate, endDate } = req.query
         const { id } = req.connectedUser
 

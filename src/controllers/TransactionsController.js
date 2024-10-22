@@ -12,6 +12,17 @@ class TransactionsController {
         }
     }
 
+    async getAllDate(req, res) {
+        try {
+            const getAllDate = await transactionsServices.getAllDate(req)
+
+            return res.status(200).json(getAllDate)
+        } catch (err) {
+            const statusCode = err.status ? err.status : 500
+            return res.status(statusCode).json({ error: err.message })
+        }
+    }
+
     async getOne(req, res) {
         try {
             const getOne = await transactionsServices.getOne(req)

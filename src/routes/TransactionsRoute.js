@@ -27,6 +27,12 @@ class TransactionsRoute {
         )
 
         this.routes.get(
+            "/transactions-date",
+            validateToken,
+            this.transactionsController.getAllDate
+        )
+
+        this.routes.get(
             "/transaction/:id",
             yupValidation(transactionsIdSchema),
             validateToken,
