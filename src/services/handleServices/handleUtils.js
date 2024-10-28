@@ -8,6 +8,15 @@ class handleUtils {
             ...options
         });
     };
+
+    handleFindCountAll = (model, filter, options) => {
+        return model.findAndCountAll({
+            where: { [Op.and]: [filter] },
+            raw: true,
+            ...options
+        });
+    };
+
     handleFindOrderAll = (model, filter, order) => {
         return model.findAll({
             where: { [Op.and]: [filter] },

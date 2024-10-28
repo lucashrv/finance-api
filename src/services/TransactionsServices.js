@@ -1,6 +1,7 @@
 const { transactions, categories, users } = require("../models")
 const {
     handleFindAll,
+    handleFindCountAll,
     handleFindByPk,
     handleFindOne,
     handleCreate,
@@ -13,18 +14,34 @@ const { Op } = require('sequelize')
 module.exports = new (class TransactionsServices {
     async getAll(req) {
         const { id } = req.connectedUser
+        const { page = 1, limit = 10 } = req.query
 
-        const getAll = await handleFindAll(
-            transactions,
-            {
-                user_id: id,
-            },
-            {
-                order: [['created_at', 'DESC']],
-                include: [{ model: categories }]
-            }
+        const offset = (page - 1) * limit
 
-        )
+        let getAll = () => { }
+
+        if (limit === 1000) {
+            getAll = await handleFindCountAll(
+                transactions,
+                {
+                    user_id: id,
+                },
+            )
+        } else {
+            getAll = await handleFindCountAll(
+                transactions,
+                {
+                    user_id: id,
+                },
+                {
+                    order: [['created_at', 'DESC']],
+                    include: [{ model: categories }],
+                    limit: parseInt(limit),
+                    offset: parseInt(offset)
+                }
+
+            )
+        }
 
         return getAll
     }
@@ -32,12 +49,15 @@ module.exports = new (class TransactionsServices {
     async getAllDate(req) {
         const { startDate, endDate } = req.query
         const { id } = req.connectedUser
+        const { page = 1, limit = 10 } = req.query
 
         const date = new Date();
         const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
         const endOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-        const getAll = await handleFindAll(
+        const offset = (page - 1) * limit
+
+        const getAll = await handleFindCountAll(
             transactions,
             {
                 user_id: id,
@@ -47,7 +67,9 @@ module.exports = new (class TransactionsServices {
             },
             {
                 order: [['created_at', 'DESC']],
-                include: [{ model: categories }]
+                include: [{ model: categories }],
+                limit: parseInt(limit),
+                offset: parseInt(offset)
             }
 
         )
