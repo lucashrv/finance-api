@@ -69,8 +69,14 @@ module.exports = new (class UsersServices {
         const user = await handleFindByPk(users, id)
 
         handleError(
-            newPassword !== confirmPassword || currentPassword === newPassword,
+            newPassword !== confirmPassword,
             'Senhas não correspondem!',
+            400
+        )
+
+        handleError(
+            currentPassword === newPassword,
+            'Senha igual a anterior!',
             400
         )
 
@@ -89,6 +95,7 @@ module.exports = new (class UsersServices {
 
     async changeName(req) {
         const { name } = req.body
+
         const { id } = req.connectedUser
 
         await handleUpdate(

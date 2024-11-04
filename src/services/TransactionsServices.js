@@ -14,36 +14,38 @@ const { Op } = require('sequelize')
 module.exports = new (class TransactionsServices {
     async getAll(req) {
         const { id } = req.connectedUser
+
+        const getAll = await handleFindAll(
+            transactions,
+            {
+                user_id: id,
+            },
+        )
+
+        return getAll
+    }
+
+    async getFindCountAll(req) {
+        const { id } = req.connectedUser
         const { page = 1, limit = 10 } = req.query
 
         const offset = (page - 1) * limit
 
-        let getAll = () => { }
+        const findCountAll = await handleFindCountAll(
+            transactions,
+            {
+                user_id: id,
+            },
+            {
+                order: [['created_at', 'DESC']],
+                include: [{ model: categories }],
+                limit: parseInt(limit),
+                offset: parseInt(offset)
+            }
 
-        if (limit === 1000) {
-            getAll = await handleFindCountAll(
-                transactions,
-                {
-                    user_id: id,
-                },
-            )
-        } else {
-            getAll = await handleFindCountAll(
-                transactions,
-                {
-                    user_id: id,
-                },
-                {
-                    order: [['created_at', 'DESC']],
-                    include: [{ model: categories }],
-                    limit: parseInt(limit),
-                    offset: parseInt(offset)
-                }
+        )
 
-            )
-        }
-
-        return getAll
+        return findCountAll
     }
 
     async getAllDate(req) {

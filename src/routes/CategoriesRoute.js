@@ -27,6 +27,12 @@ class CategoriesRoute {
         )
 
         this.routes.get(
+            "/categories-paginate",
+            validateToken,
+            this.categoriesController.getFindCountAll
+        )
+
+        this.routes.get(
             "/category/:id",
             validateToken,
             yupValidation(categoryIdSchema),

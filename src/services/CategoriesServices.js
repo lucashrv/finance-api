@@ -1,6 +1,7 @@
 const { categories, transactions } = require("../models")
 const {
     handleFindAll,
+    handleFindCountAll,
     handleFindByPk,
     handleFindOne,
     handleCreate,
@@ -16,6 +17,28 @@ module.exports = new (class CategoriesServices {
         const getAll = await handleFindAll(categories, { user_id: id }, { order: [['name', 'ASC']] })
 
         return getAll
+    }
+
+    async getFindCountAll(req) {
+        const { id } = req.connectedUser
+        const { page = 1, limit = 10 } = req.query
+
+        const offset = (page - 1) * limit
+
+        const findCountAll = await handleFindCountAll(
+            categories,
+            {
+                user_id: id,
+            },
+            {
+                order: [['name', 'ASC']],
+                limit: parseInt(limit),
+                offset: parseInt(offset)
+            }
+
+        )
+
+        return findCountAll
     }
 
     async getOne(req) {
@@ -107,7 +130,7 @@ module.exports = new (class CategoriesServices {
 
         handleError(
             !!transaction.length,
-            'Categoria cadastrada em transações!',
+            'Categoria cadastrada em uma ou mais transações!',
             405
         )
 

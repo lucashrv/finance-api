@@ -27,6 +27,12 @@ class TransactionsRoute {
         )
 
         this.routes.get(
+            "/transactions-paginate",
+            validateToken,
+            this.transactionsController.getFindCountAll
+        )
+
+        this.routes.get(
             "/transactions-date",
             validateToken,
             this.transactionsController.getAllDate

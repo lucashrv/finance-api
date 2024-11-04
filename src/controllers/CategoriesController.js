@@ -12,6 +12,17 @@ class CategoriesController {
         }
     }
 
+    async getFindCountAll(req, res) {
+        try {
+            const getFindCountAll = await categoriesServices.getFindCountAll(req)
+
+            return res.status(200).json(getFindCountAll)
+        } catch (err) {
+            const statusCode = err.status ? err.status : 500
+            return res.status(statusCode).json({ error: err.message })
+        }
+    }
+
     async getOne(req, res) {
         try {
             const getOne = await categoriesServices.getOne(req)
