@@ -1,3 +1,4 @@
+const { Sequelize } = require("sequelize")
 const { categories, transactions } = require("../models")
 const {
     handleFindAll,
@@ -21,7 +22,13 @@ module.exports = new (class CategoriesServices {
 
     async getFindCountAll(req) {
         const { id } = req.connectedUser
-        const { page = 1, limit = 10 } = req.query
+        const {
+            page = 1,
+            limit = 10,
+            search,
+            order = 'name',
+            orderType = 'ASC'
+        } = req.query
 
         const offset = (page - 1) * limit
 
@@ -29,9 +36,17 @@ module.exports = new (class CategoriesServices {
             categories,
             {
                 user_id: id,
+                [Sequelize.Op.or]: [
+                    Sequelize.where(
+                        Sequelize.fn("LOWER", Sequelize.col('name')),
+                        {
+                            [Sequelize.Op.like]: `%${search.toLowerCase()}%`
+                        }
+                    )
+                ]
             },
             {
-                order: [['name', 'ASC']],
+                order: [[order, orderType]],
                 limit: parseInt(limit),
                 offset: parseInt(offset)
             }
