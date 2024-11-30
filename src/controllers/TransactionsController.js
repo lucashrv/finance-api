@@ -19,6 +19,8 @@ class TransactionsController {
             return res.status(200).json(getFindCountAll)
         } catch (err) {
             const statusCode = err.status ? err.status : 500
+            console.log(err);
+
             return res.status(statusCode).json({ error: err.message })
         }
     }

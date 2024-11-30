@@ -13,3 +13,5 @@
 ## O projeto inclui autenticação, exibição do saldo total das transações, filtro por data de rendimentos e despesas, adição de categorias para compras, adição de transações com uma categoria inclusa, tabela com paginação, edição e deleção de categorias e transações, alteração do nome de usuário e senha, validação de campos no front com zod, na api com yup, react-hook-form para gerenciamento de formulários, ORM sequelize, MUI e Styled Components para estilização.
 
 ## A API feita com node e express utilizando classes
+
+## Update 2.0 -> Adição de pesquisa e ordenação nas tabelas

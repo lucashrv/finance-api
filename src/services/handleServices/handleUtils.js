@@ -11,9 +11,9 @@ class handleUtils {
 
     handleFindCountAll = (model, filter, options) => {
         return model.findAndCountAll({
+            ...options,
             where: { [Op.and]: [filter] },
             raw: true,
-            ...options
         });
     };
 

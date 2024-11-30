@@ -9,7 +9,7 @@ const {
     handleDestroy,
     handleError
 } = require("./handleServices/handleUtils")
-const { Op } = require('sequelize')
+const { Op, where, fn, col, cast } = require('sequelize')
 
 module.exports = new (class TransactionsServices {
     async getAll(req) {
@@ -27,7 +27,13 @@ module.exports = new (class TransactionsServices {
 
     async getFindCountAll(req) {
         const { id } = req.connectedUser
-        const { page = 1, limit = 10 } = req.query
+        const {
+            page = 1,
+            limit = 10,
+            search,
+            order = 'created_at',
+            orderType = 'DESC'
+        } = req.query
 
         const offset = (page - 1) * limit
 
@@ -35,23 +41,45 @@ module.exports = new (class TransactionsServices {
             transactions,
             {
                 user_id: id,
+                [Op.or]: [
+                    where(
+                        fn('LOWER', col('description')),
+                        {
+                            [Op.like]: `%${search.toLowerCase()}%`
+                        }
+                    ),
+                    where(
+                        cast(col('transaction'), 'TEXT'),
+                        {
+                            [Op.like]: `%${search}%`
+                        }
+                    )
+                ]
             },
             {
-                order: [['created_at', 'DESC']],
-                include: [{ model: categories }],
+                order: [[order, orderType]],
+                include: [{
+                    model: categories,
+                    as: 'category',
+                }],
                 limit: parseInt(limit),
                 offset: parseInt(offset)
             }
-
         )
-
         return findCountAll
     }
 
     async getAllDate(req) {
-        const { startDate, endDate } = req.query
         const { id } = req.connectedUser
-        const { page = 1, limit = 10 } = req.query
+        const {
+            startDate,
+            endDate,
+            page = 1,
+            limit = 10,
+            order = 'created_at',
+            orderType = 'DESC'
+        } = req.query
+        console.log(order, orderType);
 
         const date = new Date();
         const startOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -68,7 +96,7 @@ module.exports = new (class TransactionsServices {
                 }
             },
             {
-                order: [['created_at', 'DESC']],
+                order: [[order, orderType]],
                 include: [{ model: categories }],
                 limit: parseInt(limit),
                 offset: parseInt(offset)
